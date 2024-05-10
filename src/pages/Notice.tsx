@@ -4,6 +4,7 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import {AgGridReact, AgGridReactProps} from 'ag-grid-react';
 import axios from "axios";
 import {useAuth} from "../context/AuthContext";
+import {useNavigate} from "react-router-dom";
 
 interface Notice {
     title: string;
@@ -16,6 +17,7 @@ interface Notice {
 const Notice: React.FC = () => {
     const [rowsNoticeData, setRowsNoticeData] = useState([]);
     const { accessToken } = useAuth();
+    const navigate = useNavigate();
 
     console.log(accessToken);
 
@@ -71,13 +73,20 @@ const Notice: React.FC = () => {
         };
     });
 
+    const writeNotice = () => {
+        navigate('/notice/write');
+    };
+
     return (
         <div className="w-5/6 ml-[240px] h-[900px] flex-1 flex justify-center flex-col items-center">
             <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
                 공지 관리
             </div>
+            <div className="w-4/5">
+                <button className='bg-main-green-color text-white rounded-full px-3 py-1 font-bold text-sm float-end mb-3' onClick={writeNotice}>+ 공지 작성</button>
+            </div>
             <div className="ag-theme-alpine" style={{height: "650px", width: '80%'}}>
-                <AgGridReact
+            <AgGridReact
                     rowData={rowNoticeData}
                     gridOptions={gridOptions}
                     animateRows={true} // 행 애니메이션

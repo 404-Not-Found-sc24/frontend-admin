@@ -11,6 +11,7 @@ import Notice from "./pages/Notice";
 import Event from "./pages/Event";
 import Promotion from "./pages/Promotion";
 import User from "./pages/User";
+import WriteNotice from "./pages/WriteNotice";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/place" element={<Place />} />
                     <Route path="/notice" element={<Notice />} />
+                    <Route path="/notice/write" element={<WriteNotice />} />
                     <Route path="/event" element={<Event />} />
                     <Route path="/promotion" element={<Promotion />} />
                     <Route path="/user" element={<User />} />
