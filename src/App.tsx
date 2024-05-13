@@ -12,6 +12,8 @@ import Event from "./pages/Event";
 import Promotion from "./pages/Promotion";
 import User from "./pages/User";
 import WriteNotice from "./pages/WriteNotice";
+import ViewNotice from "./pages/ViewNotice";
+import PlaceApproval from "./pages/PlaceApproval";
 
 function App() {
     return (
@@ -22,8 +24,10 @@ function App() {
                     <Route path="/" element={<Main />} />
                     <Route path="/signin" element={<SignIn />} />
                     <Route path="/place" element={<Place />} />
+                    <Route path="/place/approval" element={<PlaceApproval />} />
                     <Route path="/notice" element={<Notice />} />
                     <Route path="/notice/write" element={<WriteNotice />} />
+                    <Route path="/notice/view" element={<ViewNotice />} />
                     <Route path="/event" element={<Event />} />
                     <Route path="/promotion" element={<Promotion />} />
                     <Route path="/user" element={<User />} />

@@ -106,3 +106,10 @@ code {
 .smenu, .smenu-small {display:none;}
 .lnb-onea:hover,
 .lnb-one.on .lnb-onea {font-weight:700;}
+
+.search {
+  width: 24px;
+  height: 24px;
+  background: white url(../public/image/search-line.png) no-repeat center;
+  z-index: 10;
+}

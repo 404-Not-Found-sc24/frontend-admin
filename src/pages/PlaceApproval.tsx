@@ -4,50 +4,62 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import {AgGridReact, AgGridReactProps} from 'ag-grid-react';
 import axios from "axios";
 import {useAuth} from "../context/AuthContext";
-import SearchBar from "../components/SearchBar";
 
-interface Place {
-    name: string;
+interface Approval {
     address: string;
+    content: string;
+    date: string;
+    detail: string;
+    division: string;
     latitude: number;
     longitude: number;
-    imageUrl: string;
+    name: string;
+    state: string;
+    userName: string;
 }
 
-const Place: React.FC = () => {
+const PlaceApproval: React.FC = () => {
     const [rowsPlaceData, setRowsPlaceData] = useState([]);
-    const [ keyword, setKeyword ] = useState('');
-    const [lastIndex, setLastIndex] = useState(0);
+    const { accessToken } = useAuth();
+
+    console.log(accessToken);
 
     useEffect(() => {
         getPlaceData();
-    }, []);
+    }, [accessToken]);
 
     const getPlaceData = async () => {
         try {
+            if (!accessToken) {
+                console.error("Access token is missing.");
+                return;
+            }
+
             await axios
-                .get('tour/locations?city=&keyword=' + keyword + '&lastIdx=' + lastIndex, {
+                .get(`/manage/approval`, {
                     headers: {
                         'Content-Type': 'application/json',
+                        Authorization: `Bearer ${accessToken}`,
                     },
                 })
-                .then((response) => {
+                .then(response => {
                     console.log(response.data);
                     setRowsPlaceData(response.data);
                 });
-        } catch (e: any) {
-            console.error(e);
-        }
+        } catch(e) {
+            console.error('Error:', e);
+        };
     };
 
-    const gridOptions: AgGridReactProps<Place> = {
+    const gridOptions: AgGridReactProps<Approval> = {
         columnDefs: [
             { headerName: '번호', valueGetter: (params) => params.node && params.node.rowIndex != null ? params.node.rowIndex + 1 : '' , width: 70, cellStyle: {textAlign: 'center'}},
             {headerName: '이름', field: 'name', width: 250},
+            {headerName: '내용', field: 'content', width: 300},
             {headerName: '주소', field: 'address', width: 300},
-            {headerName: '위도', field: 'latitude', width: 150, cellStyle: {textAlign: 'center'}},
-            {headerName: '경도', field: 'longitude', width: 150, cellStyle: {textAlign: 'center'}},
-            {headerName: '이미지주소', field: 'imageUrl', width: 200, cellStyle: {textAlign: 'center'}},
+            {headerName: '작성자', field: 'userName', width: 150, cellStyle: {textAlign: 'center'}},
+            {headerName: '날짜', field: 'date', width: 150, cellStyle: {textAlign: 'center'}},
+            {headerName: '승인', field: 'state', width: 100, cellStyle: {textAlign: 'center'}},
         ],
         defaultColDef: {
             sortable: true,
@@ -58,10 +70,15 @@ const Place: React.FC = () => {
     const rowPlaceData = rowsPlaceData && rowsPlaceData.map((v: any) => {
         return {
             name: v.name,
+            content: v.content,
             address: v.address,
+            userName: v.userName,
+            date: v.date,
+            state: v.state,
+            detail: v.detail,
+            division: v.division,
             latitude: v.latitude,
             longitude: v.longitude,
-            imageUrl: v.imageUrl,
         };
     });
 
@@ -69,9 +86,6 @@ const Place: React.FC = () => {
         <div className="w-5/6 ml-[240px] h-[900px] flex-1 flex justify-center flex-col items-center">
             <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
                 장소 관리
-            </div>
-            <div className="w-1/2">
-                <SearchBar />
             </div>
             <div className="ag-theme-alpine" style={{height: "650px", width: '80%'}}>
                 <AgGridReact
@@ -88,4 +102,4 @@ const Place: React.FC = () => {
     );
 };
 
-export default Place;
+export default PlaceApproval;

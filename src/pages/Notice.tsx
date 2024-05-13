@@ -19,8 +19,6 @@ const Notice: React.FC = () => {
   const { accessToken } = useAuth();
   const navigate = useNavigate();
 
-  console.log(accessToken);
-
   useEffect(() => {
     getNoticeData();
   }, [accessToken]);
@@ -47,6 +45,19 @@ const Notice: React.FC = () => {
       console.error('Error:', e);
     }
   };
+
+    const handleTitleClick = (event: any) => {
+        const clickedRowData = event.data;
+        navigate('/notice/view', {
+            state: {
+                title: clickedRowData.title,
+                content: clickedRowData.content,
+                createdDate: clickedRowData.createdDate,
+                updatedDate: clickedRowData.updatedDate,
+                memberName: clickedRowData.memberName,
+            },
+        });
+    };
 
   const gridOptions: AgGridReactProps<Notice> = {
     columnDefs: [
@@ -102,34 +113,24 @@ const Notice: React.FC = () => {
     navigate('/notice/write');
   };
 
-  return (
-    <div className="w-5/6 ml-[240px] h-[900px] flex-1 flex justify-center flex-col items-center">
-      <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
-        공지 관리
-      </div>
-      <div className="w-4/5">
-        <button
-          className="bg-main-green-color text-white rounded-full px-3 py-1 font-bold text-sm float-end mb-3"
-          onClick={writeNotice}
-        >
-          + 공지 작성
-        </button>
-      </div>
-      <div
-        className="ag-theme-alpine"
-        style={{ height: '650px', width: '80%' }}
-      >
-        <AgGridReact
-          rowData={rowNoticeData}
-          gridOptions={gridOptions}
-          animateRows={true} // 행 애니메이션
-          suppressRowClickSelection={true} // true -> 클릭 시 행이 선택안됌
-          rowSelection={'multiple'} // 여러행 선택
-          enableCellTextSelection={true} // 그리드가 일반 테이블인 것처럼 드래그시 일반 텍스트 선택
-        ></AgGridReact>
-      </div>
-    </div>
-  );
+    return (
+        <div className="w-5/6 ml-[240px] h-[900px] flex-1 flex justify-center flex-col items-center">
+            <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
+                공지 관리
+            </div>
+            <div className="w-4/5">
+                <button className='bg-main-green-color text-white rounded-full px-3 py-1 font-bold text-sm float-end mb-3' onClick={writeNotice}>+ 공지 작성</button>
+            </div>
+            <div className="ag-theme-alpine" style={{height: "650px", width: '80%'}}>
+            <AgGridReact
+                    rowData={rowNoticeData}
+                    gridOptions={gridOptions}
+                    animateRows={true}
+                >
+                </AgGridReact>
+            </div>
+        </div>
+    );
 };
 
 export default Notice;
