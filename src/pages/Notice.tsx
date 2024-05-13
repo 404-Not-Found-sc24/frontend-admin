@@ -19,7 +19,9 @@ const Notice: React.FC = () => {
     const { accessToken } = useAuth();
     const navigate = useNavigate();
 
-    console.log(accessToken);
+    useEffect(() => {
+        console.log(rowsNoticeData);
+    }, [rowsNoticeData]);
 
     useEffect(() => {
         getNoticeData();
@@ -48,6 +50,19 @@ const Notice: React.FC = () => {
         };
     };
 
+    const handleTitleClick = (event: any) => {
+        const clickedRowData = event.data;
+        navigate('/notice/view', {
+            state: {
+                title: clickedRowData.title,
+                content: clickedRowData.content,
+                createdDate: clickedRowData.createdDate,
+                updatedDate: clickedRowData.updatedDate,
+                memberName: clickedRowData.memberName,
+            },
+        });
+    };
+
     const gridOptions: AgGridReactProps<Notice> = {
         columnDefs: [
             { headerName: '번호', valueGetter: (params) => params.node && params.node.rowIndex != null ? params.node.rowIndex + 1 : '' , width: 70, cellStyle: {textAlign: 'center'}},
@@ -60,7 +75,8 @@ const Notice: React.FC = () => {
         defaultColDef: {
             sortable: true,
             headerClass: "centered",
-        }
+        },
+        onCellClicked: handleTitleClick,
     };
 
     const rowNoticeData = rowsNoticeData && rowsNoticeData.map((v: any) => {
@@ -89,10 +105,7 @@ const Notice: React.FC = () => {
             <AgGridReact
                     rowData={rowNoticeData}
                     gridOptions={gridOptions}
-                    animateRows={true} // 행 애니메이션
-                    suppressRowClickSelection={true} // true -> 클릭 시 행이 선택안됌
-                    rowSelection={'multiple'} // 여러행 선택
-                    enableCellTextSelection={true} // 그리드가 일반 테이블인 것처럼 드래그시 일반 텍스트 선택
+                    animateRows={true}
                 >
                 </AgGridReact>
             </div>

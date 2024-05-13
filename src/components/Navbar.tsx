@@ -31,6 +31,9 @@ const Navbar: React.FC = () => {
                 <a href="/place" className="lnb-onea"><span>장소 관리</span></a>
             </li>
             <li className="lnb-one subin">
+                <a href="/place/approval" className="lnb-onea"><span>장소 승인 관리</span></a>
+            </li>
+            <li className="lnb-one subin">
                 <a href="/notice" className="lnb-onea"><span>공지 관리</span></a>
             </li>
             <li className="lnb-one subin">
