@@ -52,8 +52,10 @@ const Notice: React.FC = () => {
 
     const handleTitleClick = (event: any) => {
         const clickedRowData = event.data;
+        console.log(clickedRowData);
         navigate('/notice/view', {
             state: {
+                eventId: clickedRowData.eventId,
                 title: clickedRowData.title,
                 content: clickedRowData.content,
                 createdDate: clickedRowData.createdDate,
@@ -81,6 +83,7 @@ const Notice: React.FC = () => {
 
     const rowNoticeData = rowsNoticeData && rowsNoticeData.map((v: any) => {
         return {
+            eventId: v.eventId,
             title: v.title,
             content: v.content,
             createdDate: new Date(v.createdDate),

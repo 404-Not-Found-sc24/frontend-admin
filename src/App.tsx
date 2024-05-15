@@ -14,6 +14,7 @@ import User from "./pages/User";
 import WriteNotice from "./pages/WriteNotice";
 import ViewNotice from "./pages/ViewNotice";
 import PlaceApproval from "./pages/PlaceApproval";
+import EditNotice from "./pages/EditNotice";
 
 function App() {
     return (
@@ -28,6 +29,7 @@ function App() {
                     <Route path="/notice" element={<Notice />} />
                     <Route path="/notice/write" element={<WriteNotice />} />
                     <Route path="/notice/view" element={<ViewNotice />} />
+                    <Route path="/notice/edit" element={<EditNotice />} />
                     <Route path="/event" element={<Event />} />
                     <Route path="/promotion" element={<Promotion />} />
                     <Route path="/user" element={<User />} />
