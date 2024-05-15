@@ -1,54 +1,50 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import {AgGridReact, AgGridReactProps} from 'ag-grid-react';
-import axios from "axios";
-import {useAuth} from "../context/AuthContext";
-import {useNavigate} from "react-router-dom";
+import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
+import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 interface Notice {
-    title: string;
-    content: string;
-    createdDate: Date;
-    updatedDate: Date;
-    memberName: string;
+  title: string;
+  content: string;
+  createdDate: Date;
+  updatedDate: Date;
+  memberName: string;
 }
 
 const Notice: React.FC = () => {
-    const [rowsNoticeData, setRowsNoticeData] = useState([]);
-    const { accessToken } = useAuth();
-    const navigate = useNavigate();
+  const [rowsNoticeData, setRowsNoticeData] = useState([]);
+  const { accessToken } = useAuth();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        console.log(rowsNoticeData);
-    }, [rowsNoticeData]);
+  useEffect(() => {
+    getNoticeData();
+  }, [accessToken]);
 
-    useEffect(() => {
-        getNoticeData();
-    }, [accessToken]);
+  const getNoticeData = async () => {
+    try {
+      if (!accessToken) {
+        console.error('Access token is missing.');
+        return;
+      }
 
-    const getNoticeData = async () => {
-        try {
-            if (!accessToken) {
-                console.error("Access token is missing.");
-                return;
-            }
-
-            await axios
-                .get(`/event/announce`, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${accessToken}`,
-                    },
-                })
-                .then(response => {
-                    console.log(response.data);
-                    setRowsNoticeData(response.data);
-                });
-        } catch(e) {
-            console.error('Error:', e);
-        };
-    };
+      await axios
+        .get(`/event/announce`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        })
+        .then((response) => {
+          console.log(response.data);
+          setRowsNoticeData(response.data);
+        });
+    } catch (e) {
+      console.error('Error:', e);
+    }
+  };
 
     const handleTitleClick = (event: any) => {
         const clickedRowData = event.data;
@@ -65,21 +61,43 @@ const Notice: React.FC = () => {
         });
     };
 
-    const gridOptions: AgGridReactProps<Notice> = {
-        columnDefs: [
-            { headerName: '번호', valueGetter: (params) => params.node && params.node.rowIndex != null ? params.node.rowIndex + 1 : '' , width: 70, cellStyle: {textAlign: 'center'}},
-            {headerName: '제목', field: 'title', width: 300},
-            {headerName: '내용', field: 'content', width: 300},
-            {headerName: '작성일자', field: 'createdDate', width: 150, cellStyle: {textAlign: 'center'}},
-            {headerName: '수정일자', field: 'updatedDate', width: 150, cellStyle: {textAlign: 'center'}},
-            {headerName: '작성자', field: 'memberName', width: 150, cellStyle: {textAlign: 'center'}},
-        ],
-        defaultColDef: {
-            sortable: true,
-            headerClass: "centered",
-        },
-        onCellClicked: handleTitleClick,
-    };
+  const gridOptions: AgGridReactProps<Notice> = {
+    columnDefs: [
+      {
+        headerName: '번호',
+        valueGetter: (params) =>
+          params.node && params.node.rowIndex != null
+            ? params.node.rowIndex + 1
+            : '',
+        width: 70,
+        cellStyle: { textAlign: 'center' },
+      },
+      { headerName: '제목', field: 'title', width: 300 },
+      { headerName: '내용', field: 'content', width: 300 },
+      {
+        headerName: '작성일자',
+        field: 'createdDate',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+      },
+      {
+        headerName: '수정일자',
+        field: 'updatedDate',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+      },
+      {
+        headerName: '작성자',
+        field: 'memberName',
+        width: 150,
+        cellStyle: { textAlign: 'center' },
+      },
+    ],
+    defaultColDef: {
+      sortable: true,
+      headerClass: 'centered',
+    },
+  };
 
     const rowNoticeData = rowsNoticeData && rowsNoticeData.map((v: any) => {
         return {
@@ -92,9 +110,9 @@ const Notice: React.FC = () => {
         };
     });
 
-    const writeNotice = () => {
-        navigate('/notice/write');
-    };
+  const writeNotice = () => {
+    navigate('/notice/write');
+  };
 
     return (
         <div className="w-5/6 ml-[240px] h-[900px] flex-1 flex justify-center flex-col items-center">
