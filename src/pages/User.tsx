@@ -6,11 +6,12 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 
 interface User {
-  title: string;
-  content: string;
-  createdDate: Date;
-  updatedDate: Date;
-  memberName: string;
+  email: string;
+  memberId: string;
+  name: string;
+  nickname: string;
+  phone: string;
+  role: string;
 }
 
 const User: React.FC = () => {
@@ -31,7 +32,7 @@ const User: React.FC = () => {
       }
 
       await axios
-        .get(`/User/User`, {
+        .get(`/manage/member`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,
@@ -57,24 +58,24 @@ const User: React.FC = () => {
         width: 70,
         cellStyle: { textAlign: 'center' },
       },
-      { headerName: '제목', field: 'title', width: 300 },
-      { headerName: '내용', field: 'content', width: 300 },
+      { headerName: '이름', field: 'name', width: 150, cellStyle: { textAlign: 'center' }, },
+      { headerName: '닉네임', field: 'nickname', width: 150, cellStyle: { textAlign: 'center' }, },
       {
-        headerName: '작성일자',
-        field: 'createdDate',
-        width: 150,
+        headerName: '전화번호',
+        field: 'phone',
+        width: 200,
         cellStyle: { textAlign: 'center' },
       },
       {
-        headerName: '수정일자',
-        field: 'updatedDate',
-        width: 150,
+        headerName: '이메일',
+        field: 'email',
+        width: 300,
         cellStyle: { textAlign: 'center' },
       },
       {
-        headerName: '작성자',
-        field: 'memberName',
-        width: 150,
+        headerName: '구분',
+        field: 'role',
+        width: 100,
         cellStyle: { textAlign: 'center' },
       },
     ],
@@ -88,22 +89,23 @@ const User: React.FC = () => {
     rowsUserData &&
     rowsUserData.map((v: any) => {
       return {
-        title: v.title,
-        content: v.content,
-        createdDate: new Date(v.createdDate),
-        updatedDate: new Date(v.updatedDate),
-        memberName: v.memberName,
+        email: v.email,
+        name: v.name,
+        nickname: v.nickname,
+        phone: v.phone,
+        role: v.role,
+        memberId: v.memberId,
       };
     });
 
   return (
-    <div className="w-5/6 ml-[240px] h-[900px] flex-1 flex justify-center flex-col items-center">
+    <div className="w-5/6 ml-[15%] h-full flex-1 flex justify-center flex-col items-center">
       <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
-        공지 관리
+        사용자 관리
       </div>
       <div
         className="ag-theme-alpine"
-        style={{ height: '650px', width: '80%' }}
+        style={{ height: '75%', width: '80%' }}
       >
         <AgGridReact
           rowData={rowUserData}

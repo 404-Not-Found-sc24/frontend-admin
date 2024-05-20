@@ -100,7 +100,7 @@ code {
   vertical-align: middle !important;
 }
 
-.left {background-color:#101010;height:100%;position:fixed;left:0;top:0;width:240px;z-index:5;transition:all .5s ease;-webkit-transition:all .5s ease;-moz-transition:all .5s ease;}
+.left {background-color:#101010;height:100%;position:fixed;left:0;top:0;width:15%;z-index:5;transition:all .5s ease;-webkit-transition:all .5s ease;-moz-transition:all .5s ease;}
 .left .open {width:28px;height:54px;position:absolute;right:-28px;top:50%;border-radius:0px 10px 10px 0px;background:#f4f4fc;filter: drop-shadow(0px 3px 5px rgba(45, 50, 108, 0.15));z-index:5;}
 .left .open span {display:none;}
 .left .open:before {content:"";display:block;position:absolute;left:50%;top:50%;transform:translate(-50%, -50%);width:8px;height:16px;background:url(../public/image/ico_sidebar.png) no-repeat 0 0;background-size:100%;transition:all .5s ease;-webkit-transition:all .5s ease;-moz-transition:all .5s ease;}
@@ -123,5 +123,12 @@ code {
   width: 24px;
   height: 24px;
   background: white url(../public/image/search-line.png) no-repeat center;
+  z-index: 10;
+}
+
+.delete {
+  width: 24px;
+  height: 24px;
+  background: white url(../public/image/delete-bin-6-line.png) no-repeat center;
   z-index: 10;
 }
