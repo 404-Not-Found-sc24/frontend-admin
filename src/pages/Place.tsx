@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import {AgGridReact, AgGridReactProps} from 'ag-grid-react';
-import axios from "axios";
+import axios, { AxiosError } from 'axios';
 import {useAuth} from "../context/AuthContext";
 import SearchBar from "../components/SearchBar";
 
@@ -66,14 +66,17 @@ const Place: React.FC = () => {
     });
 
     return (
-        <div className="w-5/6 ml-[240px] h-[900px] flex-1 flex justify-center flex-col items-center">
+        <div className="w-5/6 ml-[15%] h-full flex-1 flex justify-center flex-col items-center">
             <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
                 장소 관리
             </div>
             <div className="w-1/2">
-                <SearchBar />
+                <SearchBar/>
             </div>
-            <div className="ag-theme-alpine" style={{height: "650px", width: '80%'}}>
+            <div
+                className="ag-theme-alpine"
+                style={{height: '75%', width: '80%'}}
+            >
                 <AgGridReact
                     rowData={rowPlaceData}
                     gridOptions={gridOptions}
@@ -81,8 +84,7 @@ const Place: React.FC = () => {
                     suppressRowClickSelection={true} // true -> 클릭 시 행이 선택안됌
                     rowSelection={'multiple'} // 여러행 선택
                     enableCellTextSelection={true} // 그리드가 일반 테이블인 것처럼 드래그시 일반 텍스트 선택
-                >
-                </AgGridReact>
+                ></AgGridReact>
             </div>
         </div>
     );
