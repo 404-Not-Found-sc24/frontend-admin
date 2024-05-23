@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import {AgGridReact, AgGridReactProps} from 'ag-grid-react';
-import axios from "axios";
+import axios, { AxiosError } from 'axios';
 import {useAuth} from "../context/AuthContext";
 import SearchBar from "../components/SearchBar";
 
