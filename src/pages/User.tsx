@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import axios, { AxiosError } from 'axios';
-import { useAuth } from '../context/AuthContext';
+import {useAuth} from "../context/AuthContext";
 
 interface User {
   email: string;
@@ -16,13 +16,102 @@ interface User {
 
 const User: React.FC = () => {
   const [rowsUserData, setRowsUserData] = useState([]);
-  const { accessToken } = useAuth();
+  const { refreshAccessToken } = useAuth();
+  const accessToken = localStorage.getItem('accessToken');
 
   console.log(accessToken);
 
   useEffect(() => {
     getUserData();
   }, [accessToken]);
+
+  const deleteButtonRenderer = useCallback((params: any) => {
+    const handleDelete = () => {
+      const clickedRowData = params.data;
+      console.log(accessToken); // accessToken 접근
+      axios.delete(`/manage/member/` + clickedRowData.memberId, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      }).then(response => {
+        console.log('Success:', response.data);
+      }).catch(error => {
+        console.error('Error:', error);
+      });
+    };
+
+    return (
+        <div className="flex items-center justify-center" onClick={handleDelete}>
+          <div className="delete"></div>
+        </div>
+    );
+  }, [accessToken]);
+
+  const onCellValueChanged = (event: any) => {
+    if (event.colDef.field === 'role' && event.data) {
+      handleRoleChange(event.data);
+    }
+  };
+
+  const handleRoleChange = async (rowData: User) => {
+    try {
+      if (rowData.role) {
+        await changeRole(rowData);
+      }
+    } catch (error) {
+      if (
+          (error as AxiosError).response &&
+          (error as AxiosError).response?.status === 401
+      ) {
+        try {
+          await refreshAccessToken();
+          // 새로운 액세스 토큰으로 다시 요청을 보냅니다.
+          // 여기에서는 재시도 로직을 추가할 수 있습니다.
+        } catch (refreshError) {
+          console.error('Failed to refresh access token:', refreshError);
+        }
+      } else {
+        console.error('Role 변경 실패:', error);
+      }
+    }
+  };
+
+  const changeRole = async (rowData: User) => {
+    try {
+      const { memberId, role } = rowData;
+      console.log(memberId, role);
+      const requestData = {
+        memberId : memberId,
+        targetRole : role,
+      };
+      const response = await axios.post(
+          `/manage/member`,
+          requestData,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${accessToken}`,
+            },
+          },
+      );
+      console.log(response.data);
+    } catch (e) {
+      if (
+          (e as AxiosError).response &&
+          (e as AxiosError).response?.status === 401
+      ) {
+        try {
+          await refreshAccessToken();
+          // 새로운 액세스 토큰으로 다시 요청을 보냅니다.
+          // 여기에서는 재시도 로직을 추가할 수 있습니다.
+        } catch (refreshError) {
+          console.error('Failed to refresh access token:', refreshError);
+        }
+      } else {
+        console.error('사용자 role 변경 실패 :', e);
+      }
+    }
+  };
 
   const getUserData = async () => {
     try {
@@ -77,6 +166,18 @@ const User: React.FC = () => {
         field: 'role',
         width: 100,
         cellStyle: { textAlign: 'center' },
+        editable: true,
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+          values: ['USER', 'ADMIN', 'COMPANY'],
+        },
+        onCellValueChanged,
+      },
+      {
+        headerName: '삭제',
+        width: 70,
+        cellRenderer: deleteButtonRenderer,
+        cellStyle: {display: 'flex', justifyContent: 'center'},
       },
     ],
     defaultColDef: {
