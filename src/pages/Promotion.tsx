@@ -16,7 +16,7 @@ interface Promotion {
 
 const Promotion: React.FC = () => {
   const [rowsPromotionData, setRowsPromotionData] = useState([]);
-  const { accessToken } = useAuth();
+  const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
   console.log(accessToken);
@@ -54,13 +54,14 @@ const Promotion: React.FC = () => {
         const clickedRowData = params.data;
         console.log(accessToken); // accessToken 접근
         axios
-          .delete(`/manage/promotion` + clickedRowData.eventId, {
+          .delete(`/manage/event/` + clickedRowData.eventId, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           })
           .then((response) => {
             console.log('Success:', response.data);
+            getPromotionData();
           })
           .catch((error) => {
             console.error('Error:', error);
