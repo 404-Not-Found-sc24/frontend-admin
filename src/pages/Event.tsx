@@ -16,7 +16,7 @@ interface Event {
 
 const Event: React.FC = () => {
   const [rowsEventData, setRowsEventData] = useState([]);
-  const { accessToken } = useAuth();
+  const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
   console.log(accessToken);
@@ -54,13 +54,14 @@ const Event: React.FC = () => {
         const clickedRowData = params.data;
         console.log(accessToken); // accessToken 접근
         axios
-          .delete(`/manage/announce/` + clickedRowData.eventId, {
+          .delete(`/manage/event/` + clickedRowData.eventId, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           })
           .then((response) => {
             console.log('Success:', response.data);
+            getEventData();
           })
           .catch((error) => {
             console.error('Error:', error);
