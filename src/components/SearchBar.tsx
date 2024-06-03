@@ -14,7 +14,7 @@ const SearchBar: React.FC = () => {
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        navigate(`/searchplace?q=${searchTerm}`);
+        navigate(`/place?q=${searchTerm}`);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

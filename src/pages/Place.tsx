@@ -5,6 +5,7 @@ import {AgGridReact, AgGridReactProps} from 'ag-grid-react';
 import axios, { AxiosError } from 'axios';
 import {useAuth} from "../context/AuthContext";
 import SearchBar from "../components/SearchBar";
+import { Link, useLocation } from 'react-router-dom';
 
 interface Place {
     name: string;
@@ -18,15 +19,19 @@ const Place: React.FC = () => {
     const [rowsPlaceData, setRowsPlaceData] = useState([]);
     const [ keyword, setKeyword ] = useState('');
     const [lastIndex, setLastIndex] = useState(0);
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const searchTerm = queryParams.get('q') || '';
 
     useEffect(() => {
         getPlaceData();
-    }, []);
+    }, [searchTerm]);
 
     const getPlaceData = async () => {
         try {
+            console.log("keyword", searchTerm);
             await axios
-                .get('tour/locations?city=&keyword=' + keyword + '&lastIdx=' + lastIndex, {
+                .get('tour/locations?city=&keyword=' + searchTerm + '&lastIdx=' + lastIndex, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
