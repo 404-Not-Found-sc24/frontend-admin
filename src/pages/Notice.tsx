@@ -56,7 +56,7 @@ const Notice: React.FC = () => {
         const clickedRowData = params.data;
         console.log(accessToken); // accessToken 접근
         axios
-          .delete(`/manage/announce/` + clickedRowData.eventId, {
+          .delete(`/manage/event/` + clickedRowData.eventId, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
