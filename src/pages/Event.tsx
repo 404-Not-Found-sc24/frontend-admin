@@ -5,6 +5,8 @@ import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import axios, { AxiosError } from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import SearchBar from "../components/SearchBar";
+import { useLocation } from 'react-router-dom';
 
 interface Event {
   title: string;
@@ -18,10 +20,14 @@ const Event: React.FC = () => {
   const [rowsEventData, setRowsEventData] = useState([]);
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const searchTerm = queryParams.get('q') || '';
+
 
   useEffect(() => {
     getEventData();
-  }, [accessToken]);
+  }, [accessToken, searchTerm]);
 
   const getEventData = async () => {
     try {
@@ -31,7 +37,7 @@ const Event: React.FC = () => {
       }
 
       await axios
-        .get(`/event/event`, {
+        .get(`/manage/announce?div=EVENT&keyword=${searchTerm}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,
@@ -159,6 +165,9 @@ const Event: React.FC = () => {
     <div className="w-5/6 ml-[15%] h-full flex-1 flex justify-center flex-col items-center">
       <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
         이벤트 관리
+      </div>
+      <div className="w-1/2">
+        <SearchBar curr={'event'} />
       </div>
       <div className="ag-theme-alpine" style={{ height: '75%', width: '80%' }}>
         <AgGridReact
