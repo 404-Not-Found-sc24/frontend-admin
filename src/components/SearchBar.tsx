@@ -31,6 +31,12 @@ const SearchBar: React.FC<Props> = ({ curr }) => {
         navigate(`/notice?q=${searchTerm}`);
     };
 
+
+    const handleEventSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        navigate(`/event?q=${searchTerm}`);
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearchTerm(e.target.value);
     };
@@ -77,6 +83,22 @@ const SearchBar: React.FC<Props> = ({ curr }) => {
                                 type="text"
                                 className="text-gray-900 text-md rounded-lg block w-full ps-5 p-2.5 font-BMJUA focus:outline-0"
                                 placeholder="원하는 공지를 검색하세요"
+                                onChange={handleChange}
+                                value={searchTerm}
+                            />
+                            <button type="submit" className="search relative right-3"></button>
+                        </div>
+                    </div>
+                </form>
+            }
+            {curr === 'event' &&
+                <form onSubmit={handleEventSubmit}>
+                    <div className="w-full h-12 flex justify-center mb-5">
+                        <div className="w-11/12 h-full rounded-md shadow-xl flex items-center">
+                            <input
+                                type="text"
+                                className="text-gray-900 text-md rounded-lg block w-full ps-5 p-2.5 font-BMJUA focus:outline-0"
+                                placeholder="원하는 이벤트를 검색하세요"
                                 onChange={handleChange}
                                 value={searchTerm}
                             />
