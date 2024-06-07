@@ -19,8 +19,6 @@ const Event: React.FC = () => {
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
 
-  console.log(accessToken);
-
   useEffect(() => {
     getEventData();
   }, [accessToken]);
@@ -40,7 +38,6 @@ const Event: React.FC = () => {
           },
         })
         .then((response) => {
-          console.log(response.data);
           setRowsEventData(response.data);
         });
     } catch (e) {
@@ -52,7 +49,7 @@ const Event: React.FC = () => {
     (params: any) => {
       const handleDelete = () => {
         const clickedRowData = params.data;
-        console.log(accessToken); // accessToken 접근
+
         axios
           .delete(`/manage/event/` + clickedRowData.eventId, {
             headers: {
@@ -82,7 +79,7 @@ const Event: React.FC = () => {
 
   const handleTitleClick = (event: any) => {
     const clickedRowData = event.data;
-    console.log(clickedRowData);
+    
     navigate('/event/view', {
       state: {
         eventId: clickedRowData.eventId,

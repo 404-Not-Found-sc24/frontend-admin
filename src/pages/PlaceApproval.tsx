@@ -25,8 +25,6 @@ const PlaceApproval: React.FC = () => {
   const { refreshAccessToken } = useAuth();
   const accessToken = localStorage.getItem('accessToken');
 
-  console.log(accessToken);
-
   useEffect(() => {
     getPlaceData();
   }, []);
@@ -39,7 +37,7 @@ const PlaceApproval: React.FC = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      console.log(response.data);
+
       setRowsPlaceData(response.data);
     } catch (e) {
       if (
@@ -78,7 +76,7 @@ const PlaceApproval: React.FC = () => {
           },
         },
       );
-      console.log(response.data);
+
       getPlaceData();
     } catch (e) {
       if (
@@ -110,7 +108,7 @@ const PlaceApproval: React.FC = () => {
           },
         },
       );
-      console.log(response.data);
+      
       getPlaceData();
     } catch (e) {
       if (
