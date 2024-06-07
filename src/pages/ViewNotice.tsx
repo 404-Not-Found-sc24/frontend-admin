@@ -50,7 +50,7 @@ const ViewNotice: React.FC = () => {
                     Authorization: `Bearer ${accessToken}`,
                 },
             });
-            console.log(response.data);
+            
             setRowsNoticeData(response.data);
         } catch (e) {
             console.error('Error:', e);

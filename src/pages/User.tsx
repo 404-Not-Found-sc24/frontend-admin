@@ -19,8 +19,6 @@ const User: React.FC = () => {
   const { refreshAccessToken } = useAuth();
   const accessToken = localStorage.getItem('accessToken');
 
-  console.log(accessToken);
-
   useEffect(() => {
     getUserData();
   }, [accessToken]);
@@ -28,7 +26,7 @@ const User: React.FC = () => {
   const deleteButtonRenderer = useCallback((params: any) => {
     const handleDelete = () => {
       const clickedRowData = params.data;
-      console.log(accessToken); // accessToken 접근
+
       axios.delete(`/manage/member/` + clickedRowData.memberId, {
         headers: {
           'Authorization': `Bearer ${accessToken}`
@@ -79,7 +77,7 @@ const User: React.FC = () => {
   const changeRole = async (rowData: User) => {
     try {
       const { memberId, role } = rowData;
-      console.log(memberId, role);
+
       const requestData = {
         memberId : memberId,
         targetRole : role,
@@ -94,7 +92,6 @@ const User: React.FC = () => {
             },
           },
       );
-      console.log(response.data);
     } catch (e) {
       if (
           (e as AxiosError).response &&
@@ -128,7 +125,6 @@ const User: React.FC = () => {
           },
         })
         .then((response) => {
-          console.log(response.data);
           setRowsUserData(response.data);
         });
     } catch (e) {

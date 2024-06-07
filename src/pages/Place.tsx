@@ -29,7 +29,7 @@ const Place: React.FC = () => {
 
     const getPlaceData = async () => {
         try {
-            console.log("keyword", searchTerm);
+
             await axios
                 .get('tour/locations?city=&keyword=' + searchTerm + '&lastIdx=' + lastIndex, {
                     headers: {
@@ -37,7 +37,6 @@ const Place: React.FC = () => {
                     },
                 })
                 .then((response) => {
-                    console.log(response.data);
                     setRowsPlaceData(response.data);
                 });
         } catch (e: any) {
