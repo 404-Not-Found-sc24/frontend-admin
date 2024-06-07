@@ -6,6 +6,8 @@ import axios, { AxiosError } from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import '../index.css';
+import SearchBar from "../components/SearchBar";
+import { useLocation } from 'react-router-dom';
 
 interface Notice {
   title: string;
@@ -21,10 +23,13 @@ const Notice: React.FC = () => {
   const { refreshAccessToken } = useAuth();
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const searchTerm = queryParams.get('q') || '';
 
   useEffect(() => {
     getNoticeData();
-  }, [accessToken]);
+  }, [accessToken, searchTerm]);
 
   const getNoticeData = async () => {
     try {
@@ -34,7 +39,7 @@ const Notice: React.FC = () => {
       }
 
       await axios
-        .get(`/event/announce`, {
+        .get(`/manage/announce?div=ANNOUNCEMENT&keyword=${searchTerm}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,
@@ -166,6 +171,9 @@ const Notice: React.FC = () => {
     <div className="w-5/6 ml-[15%] h-full flex-1 flex justify-center flex-col items-center">
       <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
         공지 관리
+      </div>
+      <div className="w-1/2">
+        <SearchBar curr={'notice'} />
       </div>
       <div className="w-4/5">
         <button

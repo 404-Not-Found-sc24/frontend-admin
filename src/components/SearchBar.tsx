@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-const SearchBar: React.FC = () => {
+interface Props {
+    curr: string;
+}
+
+const SearchBar: React.FC<Props> = ({ curr }) => {
     const [searchTerm, setSearchTerm] = useState<string>('');
     const navigate = useNavigate();
     const location = useLocation();
@@ -12,9 +16,19 @@ const SearchBar: React.FC = () => {
         setSearchTerm(searchTermFromUrl);
     }, [location.search]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handlePlaceSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         navigate(`/place?q=${searchTerm}`);
+    };
+
+    const handleApprovalSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        navigate(`/place/approval?q=${searchTerm}`);
+    };
+
+    const handleNoticeSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        navigate(`/notice?q=${searchTerm}`);
     };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,20 +36,56 @@ const SearchBar: React.FC = () => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="w-full h-12 flex justify-center my-3">
-                <div className="w-11/12 h-full rounded-md shadow-xl flex items-center">
-                    <input
-                        type="text"
-                        className="text-gray-900 text-md rounded-lg block w-full ps-5 p-2.5 font-BMJUA focus:outline-0"
-                        placeholder="궁금한 여행지를 검색해보세요!"
-                        onChange={handleChange}
-                        value={searchTerm}
-                    />
-                    <button type="submit" className="search relative right-3"></button>
-                </div>
-            </div>
-        </form>
+        <div>
+            {curr === 'place' &&
+                <form onSubmit={handlePlaceSubmit}>
+                    <div className="w-full h-12 flex justify-center mb-5">
+                        <div className="w-11/12 h-full rounded-md shadow-xl flex items-center">
+                            <input
+                                type="text"
+                                className="text-gray-900 text-md rounded-lg block w-full ps-5 p-2.5 font-BMJUA focus:outline-0"
+                                placeholder="원하는 장소 정보를 검색하세요"
+                                onChange={handleChange}
+                                value={searchTerm}
+                            />
+                            <button type="submit" className="search relative right-3"></button>
+                        </div>
+                    </div>
+                </form>
+            }
+            {curr === 'approval' &&
+                <form onSubmit={handleApprovalSubmit}>
+                    <div className="w-full h-12 flex justify-center mb-5">
+                        <div className="w-11/12 h-full rounded-md shadow-xl flex items-center">
+                            <input
+                                type="text"
+                                className="text-gray-900 text-md rounded-lg block w-full ps-5 p-2.5 font-BMJUA focus:outline-0"
+                                placeholder="원하는 장소 승인 정보를 검색하세요"
+                                onChange={handleChange}
+                                value={searchTerm}
+                            />
+                            <button type="submit" className="search relative right-3"></button>
+                        </div>
+                    </div>
+                </form>
+            }
+            {curr === 'notice' &&
+                <form onSubmit={handleNoticeSubmit}>
+                    <div className="w-full h-12 flex justify-center mb-5">
+                        <div className="w-11/12 h-full rounded-md shadow-xl flex items-center">
+                            <input
+                                type="text"
+                                className="text-gray-900 text-md rounded-lg block w-full ps-5 p-2.5 font-BMJUA focus:outline-0"
+                                placeholder="원하는 공지를 검색하세요"
+                                onChange={handleChange}
+                                value={searchTerm}
+                            />
+                            <button type="submit" className="search relative right-3"></button>
+                        </div>
+                    </div>
+                </form>
+            }
+        </div>
     );
 };
 

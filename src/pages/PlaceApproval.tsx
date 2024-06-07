@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import {AgGridReact, AgGridReactProps} from 'ag-grid-react';
+import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import axios, { AxiosError } from 'axios';
-import {useAuth} from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import SearchBar from "../components/SearchBar";
+import { useLocation } from 'react-router-dom';
 
 interface Approval {
   approvalId: number;
@@ -24,14 +25,17 @@ const PlaceApproval: React.FC = () => {
   const [rowsPlaceData, setRowsPlaceData] = useState<Approval[]>([]);
   const { refreshAccessToken } = useAuth();
   const accessToken = localStorage.getItem('accessToken');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const searchTerm = queryParams.get('q') || '';
 
   useEffect(() => {
     getPlaceData();
-  }, []);
+  }, [searchTerm]);
 
   const getPlaceData = async () => {
     try {
-      const response = await axios.get(`/manage/approval`, {
+      const response = await axios.get(`/manage/approval?keyword=${searchTerm}`, {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
@@ -108,7 +112,7 @@ const PlaceApproval: React.FC = () => {
           },
         },
       );
-      
+
       getPlaceData();
     } catch (e) {
       if (
@@ -222,27 +226,30 @@ const PlaceApproval: React.FC = () => {
         longitude: v.longitude,
       };
     });
-  
-    return (
-        <div className="w-5/6 ml-[15%] h-full flex-1 flex justify-center flex-col items-center">
-            <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
-                장소 승인 관리
-            </div>
-            <div
-                className="ag-theme-alpine"
-                style={{height: '75%', width: '80%'}}
-            >
-                <AgGridReact
-                    rowData={rowPlaceData}
-                    gridOptions={gridOptions}
-                    animateRows={true} // 행 애니메이션
-                    suppressRowClickSelection={true} // true -> 클릭 시 행이 선택안됌
-                    rowSelection={'multiple'} // 여러행 선택
-                    enableCellTextSelection={true} // 그리드가 일반 테이블인 것처럼 드래그시 일반 텍스트 선택
-                ></AgGridReact>
-            </div>
-        </div>
-    );
+
+  return (
+    <div className="w-5/6 ml-[15%] h-full flex-1 flex justify-center flex-col items-center">
+      <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
+        장소 승인 관리
+      </div>
+      <div className="w-1/2">
+        <SearchBar curr={'approval'} />
+      </div>
+      <div
+        className="ag-theme-alpine"
+        style={{ height: '75%', width: '80%' }}
+      >
+        <AgGridReact
+          rowData={rowPlaceData}
+          gridOptions={gridOptions}
+          animateRows={true} // 행 애니메이션
+          suppressRowClickSelection={true} // true -> 클릭 시 행이 선택안됌
+          rowSelection={'multiple'} // 여러행 선택
+          enableCellTextSelection={true} // 그리드가 일반 테이블인 것처럼 드래그시 일반 텍스트 선택
+        ></AgGridReact>
+      </div>
+    </div>
+  );
 };
 
 export default PlaceApproval;
