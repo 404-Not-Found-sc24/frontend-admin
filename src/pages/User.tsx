@@ -4,6 +4,8 @@ import 'ag-grid-community/styles/ag-theme-alpine.css';
 import { AgGridReact, AgGridReactProps } from 'ag-grid-react';
 import axios, { AxiosError } from 'axios';
 import {useAuth} from "../context/AuthContext";
+import SearchBar from "../components/SearchBar";
+import { useLocation } from 'react-router-dom';
 
 interface User {
   email: string;
@@ -18,10 +20,13 @@ const User: React.FC = () => {
   const [rowsUserData, setRowsUserData] = useState([]);
   const { refreshAccessToken } = useAuth();
   const accessToken = localStorage.getItem('accessToken');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const searchTerm = queryParams.get('q') || '';
 
   useEffect(() => {
     getUserData();
-  }, [accessToken]);
+  }, [accessToken, searchTerm]);
 
   const deleteButtonRenderer = useCallback((params: any) => {
     const handleDelete = () => {
@@ -118,7 +123,7 @@ const User: React.FC = () => {
       }
 
       await axios
-        .get(`/manage/member`, {
+        .get(`/manage/member?keyword=${searchTerm}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${accessToken}`,
@@ -199,6 +204,9 @@ const User: React.FC = () => {
     <div className="w-5/6 ml-[15%] h-full flex-1 flex justify-center flex-col items-center">
       <div className="font-['Nanum Gothic'] text-3xl mb-5 font-bold text-main-green-color">
         사용자 관리
+      </div>
+      <div className="w-1/2">
+        <SearchBar curr={'user'} />
       </div>
       <div
         className="ag-theme-alpine"
