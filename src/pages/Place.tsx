@@ -75,7 +75,7 @@ const Place: React.FC = () => {
                 장소 관리
             </div>
             <div className="w-1/2">
-                <SearchBar/>
+                <SearchBar curr={'place'} />
             </div>
             <div
                 className="ag-theme-alpine"
